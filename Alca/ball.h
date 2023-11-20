@@ -14,8 +14,8 @@ namespace Alca {
 		int last_y=-1;
 		//is•ûŒü
 		//ã‰º
-		int updown=1;
-		int leftright=1;
+		int updown=-1;
+		int leftright=-1;
 		w_xy^ wall_xy;
 		int new_lr;
 		int new_ud;

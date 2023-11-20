@@ -45,13 +45,15 @@ namespace Alca {
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::Button^  button2;
 	private: System::Windows::Forms::Button^  button3;
+	private: System::Windows::Forms::Timer^  timer1;
+	private: System::ComponentModel::IContainer^  components;
 	protected:
 
 	private:
 		/// <summary>
 		/// 必要なデザイナー変数です。
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -60,10 +62,12 @@ namespace Alca {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			this->components = (gcnew System::ComponentModel::Container());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -106,6 +110,11 @@ namespace Alca {
 			this->button3->UseVisualStyleBackColor = true;
 			this->button3->Click += gcnew System::EventHandler(this, &MyForm::button3_Click);
 			// 
+			// timer1
+			// 
+			this->timer1->Interval = 200;
+			this->timer1->Tick += gcnew System::EventHandler(this, &MyForm::timer1_Tick);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
@@ -128,10 +137,13 @@ namespace Alca {
 		Graphics^ gr;
 		Pen^ pn;
 		ball^ b;
+		protected: virtual bool ProcessDialogKey(Keys keyData) override;
 	private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e) {
 		b->create_bar(gr);
 		b->create_wall(gr);
 		b->ball_start(gr);
+
+		this->KeyPreview = true;
 	}
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 		b->move_ball(gr);
@@ -145,5 +157,6 @@ private: System::Void button3_Click(System::Object^  sender, System::EventArgs^ 
 	b->bar_move(gr);
 	pictureBox1->Image = bmp;
 }
+private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e);
 };
 }

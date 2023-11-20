@@ -21,20 +21,23 @@ namespace Alca {
 		int line = width / block;
 		//一列分のマス数
 		int column = height / block;
+
 		//バーの座標配列
 		List<int>^ bar;
 		//barのy座標
-		const int bar_y=30;
+		const int bar_y=height-30;
 		//壁の座標配列
 		List<w_xy^>^ walls;
-		int wall_column = 3;
+		//int wall_column = 3;
+		int wall_column = 5;
+
 		//バーの長さ
 		int bar_length;
 		int wall_num;
 		//バーの開始位置
 		int bar_start;
 		//右に動くか、左に動くか
-		int slide_bar=-1;
+		static int slide_bar=-1;
 	public:
 		field();
 		field(Graphics^ gr);
@@ -44,6 +47,7 @@ namespace Alca {
 		bool wall_eq(List<w_xy^>^ li, w_xy^ data);
 		void bar_delete(Graphics^gr);
 		void bar_move(Graphics^ gr);
+		static void setslide_dir(int dir);
 	};
 
 	

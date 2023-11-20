@@ -18,7 +18,7 @@ int ball::getY() {
 }
 void ball::ball_start(Graphics^ gr) {
 	b_x = width / 2+block/2;
-	b_y = bar_y + (2 * block);
+	b_y = bar_y - (2 * block);
 	//初期位置にボールを描写
 	create_ball(gr,b_x, b_y);
 }
@@ -26,22 +26,26 @@ bool ball::rightleft() {
 	if (new_lr < 0) {
 		leftright = 1;
 		new_lr = last_x + leftright * block;
+		wall_xy->w_x = new_lr;
 		return true;
 	}
 	else if (new_ud < 0) {
 		updown = 1;
 		new_ud = last_y + updown * block;
+		wall_xy->w_y = new_ud;
 		return true;
 	}
 	else if (new_ud > height - block / 2) {
 
 		updown = -1;
 		new_ud = last_y + updown * block;
+		wall_xy->w_y = new_ud;
 		return true;
 	}
 	else if (new_lr > width - block / 2) {
 		leftright = -1;
 		new_lr = last_x + leftright * block;
+		wall_xy->w_x = new_lr;
 		return true;
 	}
 	else {
@@ -51,6 +55,8 @@ bool ball::rightleft() {
 
 bool ball::bar_judge() {
 	if (bar->Contains(new_lr) && new_ud == bar_y) {
+		/*Random^ rnd = gcnew Random();
+		int num = rnd->Next(1, 4);*/
 		if (updown == 1) {
 			updown = -1;
 		}
@@ -69,9 +75,14 @@ bool ball::block_judge(Graphics^ gr) {
 	if (wall_eq(walls, wall_xy)) {
 		//ブロックを塗りつぶす
 		gr->FillRectangle(Brushes::Bisque, new_lr, new_ud, block, block);
+		gr->DrawRectangle((gcnew Pen(Color::Bisque)), new_lr, new_ud, block, block);
+
+
 		reDraw(gr, new_lr, new_ud);
 		//配列から消去
 		walls->RemoveAt(wall_num);
+		Random^ rnd = gcnew Random();
+		int num = rnd->Next(1, 4);
 		//跳ね返り判定
 		if (updown == 1) {
 			updown = -1;
@@ -80,6 +91,7 @@ bool ball::block_judge(Graphics^ gr) {
 			updown = 1;
 		}
 		new_ud = last_y + updown * block;
+		wall_xy->w_y = new_ud;
 		return true;
 	}
 	else {
@@ -97,77 +109,22 @@ void ball::move_ball(Graphics^ gr) {
 	delete_white(gr, last_x, last_y);
 
 	//移動先を計算
-
-	//int new_lr = last_x + leftright * block;
-	//int new_ud = last_y + updown * block;
 	new_lr = last_x + leftright * block;
 	new_ud = last_y + updown * block;
-
-	//移動先のif分岐処理
-	//移動先が壁かバーだった場合は跳ね返る
 
 	wall_xy = gcnew w_xy();
 	wall_xy->w_x = new_lr;
 	wall_xy->w_y = new_ud;
 
-
-	//ブロックの跳ね返り補正
-	/*if (wall_eq(walls, wall_xy)) {
-		//ブロックを塗りつぶす
-		gr->FillRectangle(Brushes::Bisque, new_lr, new_ud, block, block);
-		reDraw(gr, new_lr, new_ud);
-		//配列から消去
-		walls->RemoveAt(wall_num);
-		//跳ね返り判定
-		if (updown == 1) {
-			updown = -1;
-		}
-		else {
-			updown = 1;
-		}
-		new_ud = last_y + updown * block;
-	}*/
-
-	
-
-	//バーでの跳ね返り
-	/*if (bar->Contains(new_lr) && new_ud == bar_y) {
-		if (updown == 1) {
-			updown = -1;
-		}
-		else {
-			updown = 1;
-		}
-		new_ud = last_y + updown * block;
-		MessageBox::Show("::" + new_ud + ":" + new_lr);
-	}*/
+	//移動先のif分岐処理
+	//移動先が壁かバーだった場合は跳ね返る
 
 	while (block_judge(gr) || bar_judge() || rightleft()) {
-		block_judge(gr);
+		
 		bar_judge(); 
 		rightleft();
-		//MessageBox::Show("OK");
+		block_judge(gr);
 	}
-
-
-	//左右の壁の跳ね返り補正
-	/*if (new_lr < 0) {
-		leftright = 1;
-		new_lr = last_x + leftright * block;
-	}
-	else if (new_ud < 0) {
-		updown = 1;
-		new_ud = last_y + updown * block;
-	}
-	else if (new_ud > height - block / 2) {
-		
-		updown = -1;
-		new_ud = last_y + updown * block;
-	}
-	else if (new_lr > width - block / 2) {
-		leftright = -1;
-		new_lr = last_x + leftright * block;
-	}*/
 
 	/*if (block_check(new_lr, new_ud)) {
 				//ランダムでの跳ね返り補正値
@@ -248,9 +205,11 @@ bool ball::block_check(int bx, int by) {
 
 void ball::delete_white(Graphics^ gr, int dx, int dy) {
 	gr->FillEllipse(Brushes::Bisque, dx+1, dy+1, block-2, block-2);
+	gr->DrawEllipse((gcnew Pen(Color::Bisque)), dx + 1, dy + 1, block - 2, block - 2);
 }
 void ball::create_ball(Graphics^ gr, int crx, int cry) {
 	gr->FillEllipse(Brushes::Green, crx+1, cry+1, block-2, block-2);
+	gr->DrawEllipse((gcnew Pen(Color::Navy)), crx + 1, cry + 1, block - 2, block - 2);
 }
 
 

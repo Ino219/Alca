@@ -19,10 +19,12 @@ void field::create_wall(Graphics^ gr) {
 	int start = height - wall_column * block;
 	walls = gcnew List<w_xy^>;
 	//y軸ループ
-	for (int n = 0; n < wall_column; n++) {
-		int t_s = start + n * block;
+	for (int n = 2; n < wall_column; n++) {
+		//int t_s = start + n * block;
+		int t_s = n * block;
+
 		//x軸ループ
-		for (int i = 0; i < line; i++) {
+		for (int i = 2; i < line-2; i++) {
 			int t_l = i * block;
 			w_xy^ t_xy=gcnew w_xy();
 			t_xy->w_x = t_l;
@@ -91,4 +93,12 @@ void field::bar_move(Graphics^ gr) {
 		bar->Add(temp_s);
 		gr->FillRectangle(Brushes::Green, temp_s, bar_y, block, block);
 	}
+}
+
+void Alca::field::setslide_dir(int dir)
+{
+	if (dir == 1 || dir == -1) {
+		slide_bar = dir;
+	}
+	//throw gcnew System::NotImplementedException();
 }
